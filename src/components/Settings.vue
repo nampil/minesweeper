@@ -64,64 +64,69 @@
 </template>
 
 <script setup>
-  import { inject, nextTick, onMounted, ref } from 'vue'
-  const slectedLevel = ref(1)
-  const settings = inject('settings')
-  const startOver = inject('start-over')
-  const themeColors = inject('theme-colors')
-  const handleSelectLevel = () => {
-    settings.value.level = slectedLevel.value
-    nextTick(() => {
-      localStorage.setItem('user-settings', JSON.stringify(settings.value))
-    })
-    startOver()
-  }
-  const bgAudio = inject('bg-audio')
-  const handleMusicSettings = () => {
-    if (settings.value.music) {
-      bgAudio.value.play()
-    } else {
-      bgAudio.value.pause()
-      bgAudio.value.currentTime = 0
-    }
-  }
-  const handleSelectTheme = (themeId) => {
-    settings.value.theme = themeId
+import { inject, nextTick, onMounted, ref } from 'vue'
 
-    nextTick(() => {
-      localStorage.setItem('user-settings', JSON.stringify(settings.value))
-    })
-  }
-  onMounted(() => {
-    slectedLevel.value = settings.value.level
+const slectedLevel = ref(1)
+const settings = inject('settings')
+const startOver = inject('start-over')
+const themeColors = inject('theme-colors')
+
+const handleSelectLevel = () => {
+  settings.value.level = slectedLevel.value
+  nextTick(() => {
+    localStorage.setItem('user-settings', JSON.stringify(settings.value))
   })
+  startOver()
+}
+
+const bgAudio = inject('bg-audio')
+
+const handleMusicSettings = () => {
+  if (settings.value.music) {
+    bgAudio.value.play()
+  } else {
+    bgAudio.value.pause()
+    bgAudio.value.currentTime = 0
+  }
+}
+const handleSelectTheme = (themeId) => {
+  settings.value.theme = themeId
+
+  nextTick(() => {
+    localStorage.setItem('user-settings', JSON.stringify(settings.value))
+  })
+}
+
+onMounted(() => {
+  slectedLevel.value = settings.value.level
+})
 </script>
 
 <style lang="scss" scoped>
-  .settings {
-    position: absolute;
-    inset: 0;
-    background-color: var(--clr-light);
-    padding: 1rem;
-    color: #333;
-    overflow-y: auto;
-  }
-  .radio-group,
-  .colors {
-    display: flex;
-  }
+.settings {
+  position: absolute;
+  inset: 0;
+  background-color: var(--clr-light);
+  padding: 1rem;
+  color: #333;
+  overflow-y: auto;
+}
+.radio-group,
+.colors {
+  display: flex;
+}
 
-  .colors {
-    align-items: center;
-    margin-left: auto;
-  }
-  .opt-clr {
-    background-color: var(--clr-opt);
-    width: 10px;
-    display: block;
-    aspect-ratio: 1;
-    border-radius: 50%;
-    margin-inline: 0.125rem;
-    border: 1px solid rgb(125, 125, 125);
-  }
+.colors {
+  align-items: center;
+  margin-left: auto;
+}
+.opt-clr {
+  background-color: var(--clr-opt);
+  width: 10px;
+  display: block;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  margin-inline: 0.125rem;
+  border: 1px solid rgb(125, 125, 125);
+}
 </style>

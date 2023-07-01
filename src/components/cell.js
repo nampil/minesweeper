@@ -4,20 +4,20 @@ function Cell(i, j) {
 
   this.neighborCount = 0
   this.notAnimation = false
-  this.bee = false
+  this.boom = false
   this.flaged = false
   this.revealed = false
 }
 
 Cell.prototype.reveal = function (grid, cols, rows) {
   this.revealed = true
-  if (this.neighborCount == 0) {
+  if (this.neighborCount === 0) {
     this.floodFill(grid, cols, rows)
   }
 }
 
-Cell.prototype.countBees = function (grid, cols, rows) {
-  if (this.bee) {
+Cell.prototype.countbooms = function (grid, cols, rows) {
+  if (this.boom) {
     this.neighborCount = -1
     return
   }
@@ -29,7 +29,7 @@ Cell.prototype.countBees = function (grid, cols, rows) {
       let j = this.j + yoff
       if (i > -1 && i < cols && j > -1 && j < rows) {
         let neighbor = grid[i][j]
-        if (neighbor.bee) {
+        if (neighbor.boom) {
           total++
         }
       }
@@ -45,7 +45,7 @@ Cell.prototype.floodFill = function (grid, cols, rows) {
       let j = this.j + yoff
       if (i > -1 && i < cols && j > -1 && j < rows) {
         let neighbor = grid[i][j]
-        if (!neighbor.bee && !neighbor.revealed) {
+        if (!neighbor.boom && !neighbor.revealed) {
           neighbor.reveal(grid, cols, rows)
         }
       }

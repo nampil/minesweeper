@@ -4,7 +4,7 @@
       v-for="(cell, j) in props.cells"
       :key="j"
       :class="['cell', { 'no-revealed': !cell.revealed, flaged: cell.flaged }]"
-      @click.stop="handleCellClick($event, j, cell)"
+      @click.stop="handleCellClick($event, j)"
     >
       <transition name="flaged">
         <div v-if="cell.flaged" class="cell-in flaged">
@@ -17,13 +17,13 @@
           :class="[
             'cell-in',
             {
-              bee: cell.bee,
+              boom: cell.boom,
               vacia: cell.neighborCount <= 0,
               'n-a': cell.notAnimation,
             },
           ]"
         >
-          <span v-if="cell.bee">
+          <span v-if="cell.boom">
             <i class="fa-solid fa-bomb"></i>
           </span>
           <span v-if="cell.neighborCount > 0" class="text">
@@ -36,89 +36,89 @@
 </template>
 
 <script setup>
-  import { inject } from 'vue'
-  const props = defineProps({
-    cells: Object,
-    i: Number,
-  })
+import { inject } from 'vue'
+const props = defineProps({
+  cells: Object,
+  i: Number,
+})
 
-  const settings = inject('settings')
-  const grid = inject('grid')
-  const gameOver = inject('gameOver')
-  const cols = settings.value.gridSize.cols
-  const rows = settings.value.gridSize.rows
+const settings = inject('settings')
+const grid = inject('grid')
+const gameOver = inject('gameOver')
+// const cols = settings.value.gridSize.cols
+// const rows = settings.value.gridSize.rows
 
-  const handleCellClick = (event, j, cell) => {
-    if (event.shiftKey) {
-      grid.value[props.i][j].flaged = !grid.value[props.i][j].flaged
-      return
-    }
-    if (grid.value[props.i][j].flaged) return
+const handleCellClick = (event, j) => {
+  if (event.shiftKey) {
+    grid.value[props.i][j].flaged = !grid.value[props.i][j].flaged
+    return
+  }
+  if (grid.value[props.i][j].flaged) return
 
-    if (grid.value[props.i][j].bee) {
-      gameOver()
-      return
-    }
-
-    grid.value[props.i][j].reveal(
-      grid.value,
-      settings.value.gridSize.cols,
-      settings.value.gridSize.rows
-    )
+  if (grid.value[props.i][j].boom) {
+    gameOver()
+    return
   }
 
-  const getTransitionName = (cell) => {
-    let result = ''
-    if (cell.neighborCount > 0 && !cell.notAnimation) {
-      result = 'reveal'
-    }
+  grid.value[props.i][j].reveal(
+    grid.value,
+    settings.value.gridSize.cols,
+    settings.value.gridSize.rows
+  )
+}
 
-    return result
+const getTransitionName = (cell) => {
+  let result = ''
+  if (cell.neighborCount > 0 && !cell.notAnimation) {
+    result = 'reveal'
   }
+
+  return result
+}
 </script>
 
 <style lang="scss" scoped>
-  .cell {
-    border: 1px solid var(--clr-dark);
-    width: var(--cell-size);
-    aspect-ratio: 1;
-    display: grid;
-    place-items: center;
-    transform-style: preserve-3d;
-  }
+.cell {
+  border: 1px solid var(--clr-dark);
+  width: var(--cell-size);
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  transform-style: preserve-3d;
+}
 
-  .cell-in {
-    width: 100%;
-    height: 100%;
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 1.3rem;
-    line-height: 0;
-    display: grid;
-    color: var(--clr-dark);
-    place-items: center;
-    background-color: var(--clr-light);
-    transform: translateZ(2rem);
-    transform-style: preserve-3d;
-    &.bee {
-      color: var(--clr-accent-dark);
-    }
-    &.flaged {
-      background: var(--clr-medium);
-    }
+.cell-in {
+  width: 100%;
+  height: 100%;
+  font-family: 'Luckiest Guy', cursive;
+  font-size: 1.3rem;
+  line-height: 0;
+  display: grid;
+  color: var(--clr-dark);
+  place-items: center;
+  background-color: var(--clr-light);
+  transform: translateZ(2rem);
+  transform-style: preserve-3d;
+  &.boom {
+    color: var(--clr-accent-dark);
   }
-  .text {
-    transform: translateZ(1rem);
-    transform-style: preserve-3d;
-  }
-  .no-revealed {
+  &.flaged {
     background: var(--clr-medium);
   }
+}
+.text {
+  transform: translateZ(1rem);
+  transform-style: preserve-3d;
+}
+.no-revealed {
+  background: var(--clr-medium);
+}
 
-  .reveal-enter-active {
-    transition: all 400ms ease-in-out;
-  }
+.reveal-enter-active {
+  transition: all 400ms ease-in-out;
+}
 
-  .reveal-enter-from {
-    transform: rotateY(180deg);
-  }
+.reveal-enter-from {
+  transform: rotateY(180deg);
+}
 </style>
